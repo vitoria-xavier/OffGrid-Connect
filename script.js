@@ -1,240 +1,169 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+// ================================
+// OFFGRID CONNECT
+// ================================
 
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f7f9;
-    color: #1f2937;
-    min-height: 100vh;
-}
+// Detecta o estado da conexão
+function atualizarStatusConexao() {
+    const status = document.getElementById("status-conexao");
+    const ponto = document.querySelector(".status-ponto");
 
-.topo {
-    background: #123b5d;
-    color: white;
-    padding: 24px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.topo h1 {
-    font-size: 25px;
-    margin-bottom: 6px;
-}
-
-.topo p {
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-.botao-config {
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-main {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.status {
-    background: white;
-    border-radius: 14px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-}
-
-.status-ponto {
-    width: 12px;
-    height: 12px;
-    background: #22c55e;
-    border-radius: 50%;
-    display: block;
-}
-
-.status strong {
-    font-size: 15px;
-}
-
-.status p {
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 3px;
-}
-
-.boas-vindas {
-    margin-bottom: 22px;
-}
-
-.boas-vindas h2 {
-    font-size: 23px;
-    margin-bottom: 8px;
-}
-
-.boas-vindas p {
-    color: #5b6470;
-    line-height: 1.5;
-}
-
-.menu {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-.card {
-    background: white;
-    border: none;
-    border-radius: 16px;
-    padding: 20px 15px;
-    text-align: left;
-    cursor: pointer;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-}
-
-.icone {
-    display: block;
-    font-size: 30px;
-    margin-bottom: 12px;
-}
-
-.card strong {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-.card small {
-    color: #6b7280;
-}
-
-.formulario-container,
-.lista-container {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 22px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-}
-
-.formulario-container h2,
-.lista-container h2 {
-    font-size: 20px;
-    margin-bottom: 18px;
-}
-
-.formulario-container label {
-    display: block;
-    margin: 14px 0 6px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.formulario-container input,
-.formulario-container select,
-.formulario-container textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    font-size: 15px;
-    font-family: Arial, sans-serif;
-}
-
-.formulario-container textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.botao-salvar {
-    width: 100%;
-    margin-top: 18px;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    background: #123b5d;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.botao-adicionar {
-    width: 100%;
-    margin-top: 20px;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: #123b5d;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.lista-container {
-    margin-bottom: 20px;
-}
-
-.vazio {
-    color: #6b7280;
-    font-size: 14px;
-}
-
-.informacao {
-    border-left: 4px solid #123b5d;
-    background: #f8fafc;
-    padding: 14px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-}
-
-.informacao h3 {
-    margin-bottom: 6px;
-}
-
-.informacao p {
-    color: #5b6470;
-    line-height: 1.4;
-}
-
-.botao-excluir {
-    margin-top: 10px;
-    border: none;
-    background: #dc2626;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-footer {
-    text-align: center;
-    padding: 25px 15px;
-    color: #7a8490;
-    font-size: 12px;
-}
-
-@media (max-width: 480px) {
-    .menu {
-        grid-template-columns: 1fr;
-    }
-
-    .topo h1 {
-        font-size: 22px;
+    if (navigator.onLine) {
+        status.textContent = "Conectado";
+        ponto.style.background = "#22c55e";
+    } else {
+        status.textContent = "Sem conexão";
+        ponto.style.background = "#ef4444";
     }
 }
+
+// Verifica a conexão ao abrir
+atualizarStatusConexao();
+
+// Atualiza quando a conexão muda
+window.addEventListener("online", atualizarStatusConexao);
+window.addEventListener("offline", atualizarStatusConexao);
+
+
+// ================================
+// ABRIR FORMULÁRIO
+// ================================
+
+function mostrarFormulario(categoria) {
+
+    const formulario = document.getElementById("area-formulario");
+
+    formulario.style.display = "block";
+
+    document.getElementById("categoria").value = categoria;
+
+    formulario.scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+
+// ================================
+// SALVAR INFORMAÇÃO
+// ================================
+
+function salvarInformacao() {
+
+    const titulo = document.getElementById("titulo").value.trim();
+    const categoria = document.getElementById("categoria").value;
+    const descricao = document.getElementById("descricao").value.trim();
+
+    if (titulo === "" || descricao === "") {
+        alert("Preencha o título e a descrição.");
+        return;
+    }
+
+    const informacao = {
+        id: Date.now(),
+        titulo: titulo,
+        categoria: categoria,
+        descricao: descricao
+    };
+
+    const informacoes = JSON.parse(
+        localStorage.getItem("offgrid_informacoes")
+    ) || [];
+
+    informacoes.push(informacao);
+
+    localStorage.setItem(
+        "offgrid_informacoes",
+        JSON.stringify(informacoes)
+    );
+
+    document.getElementById("titulo").value = "";
+    document.getElementById("descricao").value = "";
+
+    mostrarInformacoes();
+
+    alert("Informação salva com sucesso!");
+}
+
+
+// ================================
+// MOSTRAR INFORMAÇÕES
+// ================================
+
+function mostrarInformacoes() {
+
+    const area = document.getElementById("informacoes-salvas");
+
+    const informacoes = JSON.parse(
+        localStorage.getItem("offgrid_informacoes")
+    ) || [];
+
+    area.innerHTML = "";
+
+    if (informacoes.length === 0) {
+
+        area.innerHTML = `
+            <p class="vazio">
+                Nenhuma informação salva ainda.
+            </p>
+        `;
+
+        return;
+    }
+
+    informacoes.forEach(function(informacao) {
+
+        const elemento = document.createElement("div");
+
+        elemento.className = "informacao";
+
+        elemento.innerHTML = `
+            <h3>${informacao.titulo}</h3>
+
+            <small>
+                ${informacao.categoria}
+            </small>
+
+            <p>
+                ${informacao.descricao}
+            </p>
+
+            <button
+                class="botao-excluir"
+                onclick="excluirInformacao(${informacao.id})"
+            >
+                🗑️ Excluir
+            </button>
+        `;
+
+        area.appendChild(elemento);
+    });
+}
+
+
+// ================================
+// EXCLUIR INFORMAÇÃO
+// ================================
+
+function excluirInformacao(id) {
+
+    let informacoes = JSON.parse(
+        localStorage.getItem("offgrid_informacoes")
+    ) || [];
+
+    informacoes = informacoes.filter(function(informacao) {
+        return informacao.id !== id;
+    });
+
+    localStorage.setItem(
+        "offgrid_informacoes",
+        JSON.stringify(informacoes)
+    );
+
+    mostrarInformacoes();
+}
+
+
+// ================================
+// CARREGAR INFORMAÇÕES AO ABRIR
+// ================================
+
+mostrarInformacoes();
