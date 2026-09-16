@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,12 +30,13 @@
 
             <div>
                 <strong id="status-conexao">Conectado</strong>
-                <p>Última atualização: agora</p>
+                <p>Aplicativo pronto para uso</p>
             </div>
         </section>
 
         <section class="boas-vindas">
             <h2>Olá! 👋</h2>
+
             <p>
                 Acesse rapidamente suas informações importantes,
                 mesmo quando estiver sem internet.
@@ -43,25 +45,25 @@
 
         <section class="menu">
 
-            <button class="card">
+            <button class="card" onclick="mostrarFormulario('Emergência')">
                 <span class="icone">🆘</span>
                 <strong>Emergência</strong>
                 <small>Acesso rápido</small>
             </button>
 
-            <button class="card">
+            <button class="card" onclick="mostrarFormulario('Saúde')">
                 <span class="icone">🏥</span>
                 <strong>Saúde</strong>
                 <small>Informações importantes</small>
             </button>
 
-            <button class="card">
+            <button class="card" onclick="mostrarFormulario('Pontos')">
                 <span class="icone">📍</span>
                 <strong>Pontos</strong>
                 <small>Locais importantes</small>
             </button>
 
-            <button class="card">
+            <button class="card" onclick="mostrarInformacoes()">
                 <span class="icone">📋</span>
                 <strong>Conteúdo offline</strong>
                 <small>Informações salvas</small>
@@ -69,9 +71,67 @@
 
         </section>
 
-        <button class="botao-adicionar">
-            ➕ Adicionar informação
-        </button>
+        <section id="area-formulario" class="formulario-container">
+
+            <h2>➕ Adicionar informação</h2>
+
+            <label for="titulo">Título</label>
+
+            <input
+                type="text"
+                id="titulo"
+                placeholder="Ex.: Ponto de encontro"
+            >
+
+            <label for="categoria">Categoria</label>
+
+            <select id="categoria">
+
+                <option value="Emergência">
+                    🆘 Emergência
+                </option>
+
+                <option value="Saúde">
+                    🏥 Saúde
+                </option>
+
+                <option value="Pontos">
+                    📍 Pontos
+                </option>
+
+                <option value="Outro">
+                    📋 Outro
+                </option>
+
+            </select>
+
+            <label for="descricao">Descrição</label>
+
+            <textarea
+                id="descricao"
+                placeholder="Digite uma informação importante..."
+            ></textarea>
+
+            <button
+                class="botao-salvar"
+                onclick="salvarInformacao()"
+            >
+                💾 Salvar informação
+            </button>
+
+        </section>
+
+        <section id="lista-informacoes" class="lista-container">
+
+            <h2>📋 Minhas informações</h2>
+
+            <div id="informacoes-salvas">
+                <p class="vazio">
+                    Nenhuma informação salva ainda.
+                </p>
+            </div>
+
+        </section>
 
     </main>
 
@@ -82,4 +142,5 @@
     <script src="script.js"></script>
 
 </body>
-  </html>
+
+</html>
