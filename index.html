@@ -142,6 +142,15 @@
     <script src="script.js"></script>
 
 </body>
+    <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => console.log("OffGrid-Connect: modo offline ativado"))
+        .catch((error) => console.error("Erro ao ativar modo offline:", error));
+    });
+  }
+                </script>
 
 </html>            
 
