@@ -1,159 +1,114 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="description" content="Informações essenciais disponíveis mesmo sem conexão.">
 
-    <title>OffGrid Connect</title>
-
-    <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#2563eb">
-
-    <link rel="stylesheet" href="style.css">
+  <title>OffGrid Connect</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
+  <header class="topo">
+    <div>
+      <h1>OffGrid Connect</h1>
+      <p>Informação essencial. Mesmo sem conexão.</p>
+    </div>
+    <button class="botao-config" type="button" aria-label="Configurações"
+      onclick="alert('Configurações estarão disponíveis em uma próxima versão.')">
+      ⚙️
+    </button>
+  </header>
 
-    <header class="topo">
-        <div>
-            <h1>OffGrid Connect</h1>
-            <p>Informação essencial. Mesmo sem conexão.</p>
-        </div>
+  <main>
+    <section class="status" aria-live="polite">
+      <span class="status-ponto"></span>
+      <div>
+        <strong id="status-conexao">Verificando conexão...</strong>
+        <p>Aplicativo pronto para uso</p>
+      </div>
+    </section>
 
-        <button class="botao-config" aria-label="Configurações">
-            ⚙️
-        </button>
-    </header>
+    <section class="boas-vindas">
+      <h2>Olá! 👋</h2>
+      <p>Acesse rapidamente suas informações importantes, mesmo quando estiver sem internet.</p>
+    </section>
 
-    <main>
+    <section class="menu" aria-label="Categorias">
+      <button class="card" type="button" onclick="mostrarFormulario('Emergência')">
+        <span class="icone">🆘</span>
+        <strong>Emergência</strong>
+        <small>Acesso rápido</small>
+      </button>
+      <button class="card" type="button" onclick="mostrarFormulario('Saúde')">
+        <span class="icone">🏥</span>
+        <strong>Saúde</strong>
+        <small>Informações importantes</small>
+      </button>
+      <button class="card" type="button" onclick="mostrarFormulario('Pontos')">
+        <span class="icone">📍</span>
+        <strong>Pontos</strong>
+        <small>Locais importantes</small>
+      </button>
+      <button class="card" type="button" onclick="mostrarInformacoes()">
+        <span class="icone">📋</span>
+        <strong>Conteúdo offline</strong>
+        <small>Informações salvas</small>
+      </button>
+    </section>
 
-        <section class="status">
-            <span class="status-ponto"></span>
+    <section id="area-formulario" class="formulario-container">
+      <h2>➕ Adicionar informação</h2>
 
-            <div>
-                <strong id="status-conexao">Conectado</strong>
-                <p>Aplicativo pronto para uso</p>
-            </div>
-        </section>
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" maxlength="120"
+        placeholder="Ex.: Ponto de encontro">
 
-        <section class="boas-vindas">
-            <h2>Olá! 👋</h2>
+      <label for="categoria">Categoria</label>
+      <select id="categoria">
+        <option value="Emergência">🆘 Emergência</option>
+        <option value="Saúde">🏥 Saúde</option>
+        <option value="Pontos">📍 Pontos</option>
+        <option value="Outro">📋 Outro</option>
+      </select>
 
-            <p>
-                Acesse rapidamente suas informações importantes,
-                mesmo quando estiver sem internet.
-            </p>
-        </section>
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" maxlength="5000"
+        placeholder="Digite uma informação importante..."></textarea>
 
-        <section class="menu">
+      <button class="botao-salvar" type="button" onclick="salvarInformacao()">
+        💾 Salvar informação
+      </button>
+      <button type="button" onclick="fecharFormulario()">
+        Cancelar
+      </button>
+    </section>
 
-            <button class="card" onclick="mostrarFormulario('Emergência')">
-                <span class="icone">🆘</span>
-                <strong>Emergência</strong>
-                <small>Acesso rápido</small>
-            </button>
+    <section id="lista-informacoes" class="lista-container">
+      <h2>📋 Minhas informações</h2>
+      <div id="informacoes-salvas">
+        <p class="vazio">Carregando informações...</p>
+      </div>
+    </section>
+  </main>
 
-            <button class="card" onclick="mostrarFormulario('Saúde')">
-                <span class="icone">🏥</span>
-                <strong>Saúde</strong>
-                <small>Informações importantes</small>
-            </button>
+  <footer>
+    <p>OffGrid Connect • Projeto HACK47</p>
+  </footer>
 
-            <button class="card" onclick="mostrarFormulario('Pontos')">
-                <span class="icone">📍</span>
-                <strong>Pontos</strong>
-                <small>Locais importantes</small>
-            </button>
-
-            <button class="card" onclick="mostrarInformacoes()">
-                <span class="icone">📋</span>
-                <strong>Conteúdo offline</strong>
-                <small>Informações salvas</small>
-            </button>
-
-        </section>
-
-        <section id="area-formulario" class="formulario-container">
-
-            <h2>➕ Adicionar informação</h2>
-
-            <label for="titulo">Título</label>
-
-            <input
-                type="text"
-                id="titulo"
-                placeholder="Ex.: Ponto de encontro"
-            >
-
-            <label for="categoria">Categoria</label>
-
-            <select id="categoria">
-
-                <option value="Emergência">
-                    🆘 Emergência
-                </option>
-
-                <option value="Saúde">
-                    🏥 Saúde
-                </option>
-
-                <option value="Pontos">
-                    📍 Pontos
-                </option>
-
-                <option value="Outro">
-                    📋 Outro
-                </option>
-
-            </select>
-
-            <label for="descricao">Descrição</label>
-
-            <textarea
-                id="descricao"
-                placeholder="Digite uma informação importante..."
-            ></textarea>
-
-            <button
-                class="botao-salvar"
-                onclick="salvarInformacao()"
-            >
-                💾 Salvar informação
-            </button>
-
-        </section>
-
-        <section id="lista-informacoes" class="lista-container">
-
-            <h2>📋 Minhas informações</h2>
-
-            <div id="informacoes-salvas">
-                <p class="vazio">
-                    Nenhuma informação salva ainda.
-                </p>
-            </div>
-
-        </section>
-
-    </main>
-
-    <footer>
-        <p>OffGrid Connect • Projeto HACK47</p>
-    </footer>
-
-    <script src="script.js"></script>
-
+  <script src="./script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch((erro) => console.error("Falha no modo offline:", erro));
+      });
+    }
+  </script>
 </body>
-    <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js")
-        .then(() => console.log("OffGrid-Connect: modo offline ativado"))
-        .catch((error) => console.error("Erro ao ativar modo offline:", error));
-    });
-  }
-                </script>
+</html>
 
-</html>            
 
