@@ -1,169 +1,139 @@
-// ================================
-// OFFGRID CONNECT
-// ================================
+"use strict";
 
-// Detecta o estado da conexão
-function atualizarStatusConexao() {
-    const status = document.getElementById("status-conexao");
-    const ponto = document.querySelector(".status-ponto");
+const CHAVE = "offgrid_informacoes";
 
-    if (navigator.onLine) {
-        status.textContent = "Conectado";
-        ponto.style.background = "#22c55e";
-    } else {
-        status.textContent = "Sem conexão";
-        ponto.style.background = "#ef4444";
-    }
+function lerInformacoes() {
+  try {
+    const dados = JSON.parse(localStorage.getItem(CHAVE) || "[]");
+    return Array.isArray(dados) ? dados : [];
+  } catch (erro) {
+    console.error("Erro ao ler informações:", erro);
+    return [];
+  }
 }
 
-// Verifica a conexão ao abrir
-atualizarStatusConexao();
+function salvarLista(lista) {
+  try {
+    localStorage.setItem(CHAVE, JSON.stringify(lista));
+    return true;
+  } catch (erro) {
+    console.error("Erro ao salvar:", erro);
+    alert("Não foi possível salvar. Verifique o espaço disponível no aparelho.");
+    return false;
+  }
+}
 
-// Atualiza quando a conexão muda
+function atualizarStatusConexao() {
+  const status = document.getElementById("status-conexao");
+  const ponto = document.querySelector(".status-ponto");
+  if (!status || !ponto) return;
+
+  const conectado = navigator.onLine;
+  status.textContent = conectado ? "Conectado" : "Sem conexão";
+  ponto.style.background = conectado ? "#22c55e" : "#ef4444";
+}
+
 window.addEventListener("online", atualizarStatusConexao);
 window.addEventListener("offline", atualizarStatusConexao);
 
-
-// ================================
-// ABRIR FORMULÁRIO
-// ================================
-
 function mostrarFormulario(categoria) {
+  const formulario = document.getElementById("area-formulario");
+  const campoCategoria = document.getElementById("categoria");
+  if (!formulario || !campoCategoria) return;
 
-    const formulario = document.getElementById("area-formulario");
-
-    formulario.style.display = "block";
-
-    document.getElementById("categoria").value = categoria;
-
-    formulario.scrollIntoView({
-        behavior: "smooth"
-    });
+  campoCategoria.value = categoria;
+  formulario.style.display = "block";
+  formulario.scrollIntoView({ behavior: "smooth" });
 }
-
-
-// ================================
-// SALVAR INFORMAÇÃO
-// ================================
 
 function salvarInformacao() {
+  const titulo = document.getElementById("titulo").value.trim();
+  const categoria = document.getElementById("categoria").value;
+  const descricao = document.getElementById("descricao").value.trim();
 
-    const titulo = document.getElementById("titulo").value.trim();
-    const categoria = document.getElementById("categoria").value;
-    const descricao = document.getElementById("descricao").value.trim();
+  if (!titulo || !descricao) {
+    alert("Preencha o título e a descrição.");
+    return;
+  }
 
-    if (titulo === "" || descricao === "") {
-        alert("Preencha o título e a descrição.");
-        return;
-    }
+  const informacoes = lerInformacoes();
+  informacoes.push({
+    id: Date.now() + Math.random(),
+    titulo,
+    categoria,
+    descricao,
+    criadaEm: new Date().toISOString()
+  });
 
-    const informacao = {
-        id: Date.now(),
-        titulo: titulo,
-        categoria: categoria,
-        descricao: descricao
-    };
+  if (!salvarLista(informacoes)) return;
 
-    const informacoes = JSON.parse(
-        localStorage.getItem("offgrid_informacoes")
-    ) || [];
+  document.getElementById("titulo").value = "";
+  document.getElementById("descricao").value = "";
 
-    informacoes.push(informacao);
-
-    localStorage.setItem(
-        "offgrid_informacoes",
-        JSON.stringify(informacoes)
-    );
-
-    document.getElementById("titulo").value = "";
-    document.getElementById("descricao").value = "";
-
-    mostrarInformacoes();
-
-    alert("Informação salva com sucesso!");
+  mostrarInformacoes();
+  alert("Informação salva com sucesso!");
 }
-
-
-// ================================
-// MOSTRAR INFORMAÇÕES
-// ================================
 
 function mostrarInformacoes() {
+  const area = document.getElementById("informacoes-salvas");
+  if (!area) return;
 
-    const area = document.getElementById("informacoes-salvas");
+  area.replaceChildren();
+  const informacoes = lerInformacoes();
 
-    const informacoes = JSON.parse(
-        localStorage.getItem("offgrid_informacoes")
-    ) || [];
+  if (informacoes.length === 0) {
+    const vazio = document.createElement("p");
+    vazio.className = "vazio";
+    vazio.textContent = "Nenhuma informação salva ainda.";
+    area.appendChild(vazio);
+    return;
+  }
 
-    area.innerHTML = "";
+  informacoes.forEach((info) => {
+    const card = document.createElement("div");
+    card.className = "informacao";
 
-    if (informacoes.length === 0) {
+    const titulo = document.createElement("h3");
+    titulo.textContent = info.titulo;
 
-        area.innerHTML = `
-            <p class="vazio">
-                Nenhuma informação salva ainda.
-            </p>
-        `;
+    const categoria = document.createElement("small");
+    categoria.textContent = info.categoria;
 
-        return;
-    }
+    const descricao = document.createElement("p");
+    descricao.textContent = info.descricao;
 
-    informacoes.forEach(function(informacao) {
-
-        const elemento = document.createElement("div");
-
-        elemento.className = "informacao";
-
-        elemento.innerHTML = `
-            <h3>${informacao.titulo}</h3>
-
-            <small>
-                ${informacao.categoria}
-            </small>
-
-            <p>
-                ${informacao.descricao}
-            </p>
-
-            <button
-                class="botao-excluir"
-                onclick="excluirInformacao(${informacao.id})"
-            >
-                🗑️ Excluir
-            </button>
-        `;
-
-        area.appendChild(elemento);
+    const excluir = document.createElement("button");
+    excluir.className = "botao-excluir";
+    excluir.type = "button";
+    excluir.textContent = "🗑️ Excluir";
+    excluir.addEventListener("click", () => {
+      excluirInformacao(info.id);
     });
+
+    card.append(titulo, categoria, descricao, excluir);
+    area.appendChild(card);
+  });
 }
-
-
-// ================================
-// EXCLUIR INFORMAÇÃO
-// ================================
 
 function excluirInformacao(id) {
+  if (!confirm("Deseja excluir esta informação?")) return;
 
-    let informacoes = JSON.parse(
-        localStorage.getItem("offgrid_informacoes")
-    ) || [];
+  const informacoes = lerInformacoes().filter(
+    (info) => info.id !== id
+  );
 
-    informacoes = informacoes.filter(function(informacao) {
-        return informacao.id !== id;
-    });
-
-    localStorage.setItem(
-        "offgrid_informacoes",
-        JSON.stringify(informacoes)
-    );
-
+  if (salvarLista(informacoes)) {
     mostrarInformacoes();
+  }
 }
 
+// Mantém as funções acessíveis aos botões do index.html.
+window.mostrarFormulario = mostrarFormulario;
+window.salvarInformacao = salvarInformacao;
+window.mostrarInformacoes = mostrarInformacoes;
+window.excluirInformacao = excluirInformacao;
 
-// ================================
-// CARREGAR INFORMAÇÕES AO ABRIR
-// ================================
-
-mostrarInformacoes();
+document.addEventListener("DOMContentLoaded", () => {
+  atualizarStatusConexao();
+  mostrarInformacoes();
+});
